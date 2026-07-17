@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- Tema base: força modo claro -->
+    <style name="Theme.BaladaCP" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/backgroundLight</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:statusBarColor">@color/franceBlue</item>
+        <item name="android:navigationBarColor">@color/franceBlue</item>
+    </style>
+
+    <!-- Tema tela cheia: some com status bar e barra de navegação -->
+    <style name="Theme.BaladaCP.Fullscreen" parent="Theme.BaladaCP">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+</resources>

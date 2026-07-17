@@ -1,0 +1,9 @@
+<resources>
+    <color name="franceBlue">#0055A4</color>
+    <color name="franceWhite">#FFFFFF</color>
+    <color name="franceRed">#EF4135</color>
+    <color name="backgroundLight">#FFFFFF</color>
+    <color name="bubbleUser">#0055A4</color>
+    <color name="bubbleBot">#F1F1F1</color>
+    <color name="textDark">#1A1A1A</color>
+</resources>
