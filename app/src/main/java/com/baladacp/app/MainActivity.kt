@@ -128,7 +128,7 @@ object AiEngine {
         diga que a informação será confirmada nas redes sociais oficiais, sem inventar.
     """
 
-    private const val MODEL = "gemini-2.0-flash"
+    private const val MODEL = "gemini-2.5-flash"
     private const val ENDPOINT_BASE =
         "https://generativelanguage.googleapis.com/v1beta/models/$MODEL:generateContent?key="
 
@@ -190,8 +190,14 @@ object AiEngine {
     /** Converte o histórico de mensagens no formato exigido pela API do Gemini. */
     private fun montarConteudo(historico: List<ChatMessage>): JSONArray {
         val array = JSONArray()
+        // A API do Gemini exige que a conversa comece com uma mensagem do
+        // usuário (role "user"). Como a primeira mensagem da lista é sempre
+        // a saudação do bot, descartamos tudo antes da primeira msg do usuário.
+        val primeiraDoUsuario = historico.indexOfFirst { it.isUser }
+        val semSaudacaoInicial =
+            if (primeiraDoUsuario >= 0) historico.subList(primeiraDoUsuario, historico.size) else historico
         // Limita ao histórico recente para manter a chamada rápida e barata.
-        val recentes = historico.takeLast(20)
+        val recentes = semSaudacaoInicial.takeLast(20)
         for (msg in recentes) {
             val item = JSONObject().apply {
                 put("role", if (msg.isUser) "user" else "model")
@@ -258,8 +264,10 @@ fun BaladaCPScreen() {
             val resposta = try {
                 AiEngine.perguntar(apiKey, mensagens.toList())
             } catch (e: Exception) {
-                // Se a IA falhar (sem internet, chave inválida, etc.), cai no modo antigo.
-                RuleEngine.responder(pergunta)
+                // Se a IA falhar (sem internet, chave inválida, etc.), cai no modo
+                // antigo, mas avisa o motivo pra facilitar o diagnóstico.
+                "⚠️ Não consegui falar com a IA agora (${e.message ?: "erro desconhecido"}).\n\n" +
+                    RuleEngine.responder(pergunta)
             }
             mensagens.add(ChatMessage(resposta, isUser = false))
             carregando = false
